@@ -360,7 +360,7 @@ def get_color_for_type(node_type: str) -> str:
     }
     return color_map.get(node_type, '#CCCCCC')
 
-def visualize_graph(enriched_nodes, news_metadata_nodes, has_relationships, similarity_edges):
+def visualize_graph(enriched_nodes, news_metadata_nodes, has_relationships):
     """
     Visualizes the complete knowledge graph including news metadata, has relationships, and similarity edges.
     """
@@ -417,20 +417,7 @@ def visualize_graph(enriched_nodes, news_metadata_nodes, has_relationships, simi
             continue
     
     # Add similarity edges
-    for edge in similarity_edges:
-        try:
-            net.add_edge(
-                edge.source.id,
-                edge.target.id,
-                label=f"Similarity: {edge.properties['similarity_score']:.2f}",
-                color='#4ECDC4',
-                width=3 * edge.properties['similarity_score'],
-                arrows='to',
-                title=f"Semantic similarity: {edge.properties['similarity_score']:.3f}"
-            )
-        except Exception as e:
-            print(f"Error adding similarity edge {edge.source} -> {edge.target}: {e}")
-            continue
+   
     
     # Configure graph layout
     net.set_options("""
@@ -468,17 +455,15 @@ async def generate_knowledge_graph(start: int, limit: int, similarity_threshold:
     """
     result = await process_news_graph_with_similarities(start, limit, similarity_threshold)
     
-    """net = visualize_graph(
+    net = visualize_graph(
         result['enriched_nodes'],
         result['news_metadata_nodes'],
         result['has_relationships'],
-        result['similarity_edges']
-    )"""
+        #result['similarity_edges']
+    )
     
     print(f"Processed {result['total_news_processed']} news articles")
     print(f"Created {result['total_has_relationships']} 'has' relationships")
-    print(f"Created {len(result['similarity_edges'])} similarity edges")
-    
-    return result['enhanced_docs']
-#net,
 
+    
+    return net,result['enhanced_docs']
