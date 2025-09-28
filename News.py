@@ -10,7 +10,7 @@ from qdrantManager import QdrantDataManager  # Fixed import name
 # Configure page
 st.set_page_config(
     page_title="Qdrant News Explorer",
-    page_icon="🔍"
+    page_icon="🔍",
     layout="wide",
     initial_sidebar_state="expanded"
 )
